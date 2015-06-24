@@ -1,0 +1,153 @@
+%start S
+
+S[SEM=<?ac(?p1)>,NEG=?neg] -> NP[SEM=?p1,NUM=?num] VP[SEM=?ac,NEG=?neg,NUM=?num]
+S -> S Conj S
+S[SEM=<?ac(?p1)>] -> NP[SEM=?p1,NUM=?num] Sep GVR Sep VP[SEM=?ac,NUM=?num]
+S[SEM=<?ac(?p1)>] -> NP[SEM=?p1,NUM=?num] VP[SEM=?ac,NUM=?num] GVR
+
+GVR[SEM=<?ac(?p1)>] -> PronRel[SEM=?p1] VP[SEM=?ac]
+
+VP[SEM=<\x.?ac(x, ?p2)>,NEG=?neg,NUM=?num] -> V[SEM=?ac,NEG=?neg,NUM=?num] PP[SEM=?p2] 
+VP[SEM=<\x.?ac(x)>,NEG=?neg,NUM=?num] -> V[SEM=?ac,NEG=?neg,NUM=?num]
+
+PP[SEM=?p] -> Prep[NUM=?num] NP[SEM=?p,NUM=?num]
+# PP[SEM=<multiprep(?q, ?p)>] -> Prep[NUM=?num] NP[SEM=?q,NUM=?num] Prep[NUM=?num] NP[SEM=?p,NUM=?num]
+# PP[SEM=<?p(?q)>] -> Prep[NUM=?num] NP[SEM=?q,NUM=?num] PP[SEM=?p]
+
+NP[SEM=?p,NUM=?num] -> N[SEM=?p,NUM=?num] | GN[SEM=?p,NUM=?num]
+
+V[SEM=?ac,NEG=<false>,NUM=?num] -> VS[SEM=?ac,NUM=?num] | VerbeConj[NUM=?num] VS[SEM=?ac] | VerbeConj[NUM=?num] GN[SEM=?ac]
+V[SEM=?ac,NEG=<true>,NUM=?num] -> NegPx VS[SEM=?ac,NUM=?num] NegSx | NegPx VerbeConj NegSx VS[SEM=?ac] | NegPx VerbeConj NegSx GN[SEM=?ac]
+V[SEM=<location(?loc,?ac)>,NEG=<false>,NUM=?num] -> VerbeConj[NUM=?num] PP[SEM=?loc] Prep Range[SEM=?ac]
+V[SEM=<location(?ac)>,NEG=<true>,NUM=?num] -> NegPx VerbeConj[NUM=?num] NegSx PP Prep Range[SEM=?ac]
+
+# S[SEM=<impact(?loc, ?t, ?rayon)>] -> NP VerbeConj V PP[SEM=?loc] Prep Num[SEM=?t] Temps Prep N Prep Num[SEM=?rayon]
+
+VS[SEM=?ac,NUM=?num] -> VerbeSimple[SEM=?ac,NUM=?num]
+N[SEM=?nom,NUM=?num] -> Art[NUM=?num] N[SEM=?nom,NUM=?num]
+# N[SEM=?nom,NUM=?num] -> N[SEM=?nom,NUM=?num] Adj
+N[SEM=?nom,NUM=?num] -> Lieu[SEM=?nom,NUM=?num] | Pays[SEM=?nom,NUM=?num]
+N[SEM=?nom,NUM=?num] -> Nom[SEM=?nom,GENRE=?g,NUM=?num] | Pronom[SEM=?nom,GENRE=?g,NUM=?num]
+N[SEM=?nom,NUM=?num] -> Num[SEM=?nom] Temps
+# N[SEM=<rayon(?x)>] -> 'rayon' Prep Num[SEM=?x] | 'radius' Prep Num[SEM=?x]
+N[SEM=<rayon(?x)>] -> Art N[SEM=<rayon>] Prep Num[SEM=?x]
+
+GN[SEM=<?y(?x)>,NUM=?num] -> NP[SEM=?y,NUM=?num] PP[SEM=?x]
+GN[SEM=<aggregate(?y, ?x)>,NUM=<plur>] -> N[SEM=?y] Conj N[SEM=?x]
+GN[SEM=<?x(?y)>,NUM=<plur>] -> NP[SEM=?y] Conj GN[SEM=?x]
+
+Range[SEM=<range(?x, ?y)>] -> Num[SEM=?x] Prep Num[SEM=?y] | Num[SEM=?x] Prep Num[SEM=?y] Temps
+
+Pays[SEM=<USA>,NUM=<plur>] -> 'usa' | 'etats-unis' | 'etatsunis' | 'unitedstates'
+Pays[SEM=<UK>,NUM=<sing>] -> 'uk' | 'unitedkingdom' | 'royaumeuni'
+Pays[SEM=<Russie>,NUM=<sing>] -> 'russie' | 'russia'
+Pays[SEM=<Coree>,NUM=<sing>] -> 'coreedunord' | 'northkorea'
+Pays[SEM=<Allemagne>,NUM=<sing>] -> 'allemagne' | 'germany'
+Pays[SEM=<Chine>,NUM=<sing>] -> 'chine' | 'china'
+Pays[SEM=<Cuba>,NUM=<sing>] -> 'cuba'
+Pays[SEM=<France>,NUM=<sing>] -> 'france'
+
+Lieu[SEM=<TokyoBeach>,NUM=<sing>] -> 'tokyobeach' | 'plage'
+Lieu[SEM=<DowntownTokyo>,NUM=<sing>] -> 'downtowntokyo' | 'centre-ville'
+Lieu[SEM=<TokyoStadium>,NUM=<sing>] -> 'tokyostadium' | 'stade'
+Lieu[SEM=<TokyoPark>,NUM=<sing>] -> 'tokyopark' | 'parc'
+Lieu[SEM=<TokyoPort>,NUM=<sing>] -> 'tokyoport' | 'port'
+Lieu[SEM=<TokyoCinema>,NUM=<sing>] -> 'tokyocinema' | 'cinema'
+Lieu[SEM=<TokyoBroadcastStation>,NUM=<sing>] -> 'tokyobroadcaststation' | 'station'
+Lieu[SEM=<ResidentialTokyo>,NUM=<sing>] -> 'residentialtokyo' | 'quartier' | 'quartier' Adj
+Lieu[SEM=<CyberCafe>,NUM=<sing>] -> 'cybercafe' | 'cafe'
+Lieu[SEM=<GasStation>,NUM=<sing>] -> 'gasstation' | 'depanneur'
+Lieu[SEM=<Parliament>,NUM=<sing>] -> 'parliament' | 'parlement'
+Lieu[SEM=<Coiffeur>,NUM=<sing>] -> 'coiffeur' | 'barbier'
+
+Nprop[SEM=<ArnoldSchwarzenegger>,GENRE=<masc>,NUM=<sing>] -> 'arnoldschwarzenegger' | 'arnold'
+Nprop[SEM=<JohnnyCash>,GENRE=<masc>,NUM=<sing>] -> 'johnnycash' | 'johnny'
+Nprop[SEM=<KimKardashian>,GENRE=<fem>,NUM=<sing>] -> 'kimkardashian' | 'kim'
+Nprop[SEM=<JustinBieber>,GENRE=<fem>,NUM=<sing>] -> 'justinbieber' | 'justin'
+Nprop[SEM=<JennaJameson>,GENRE=<fem>,NUM=<sing>] -> 'jennajameson' | 'jenna'
+Nprop[SEM=<MichaelJackson>,GENRE=<masc>,NUM=<sing>] -> 'michaeljackson' | 'michael'
+Nprop[SEM=<KatyPerry>,GENRE=<fem>,NUM=<sing>] -> 'katyperry' | 'katy'
+Nprop[SEM=<JackyChan>,GENRE=<masc>,NUM=<sing>] -> 'jackychan' | 'jacky'
+
+Nom[SEM=?p,GENRE=?g,NUM=?n] -> Nprop[SEM=?p,GENRE=?g,NUM=?n]
+Nom[SEM=<ambassade>] -> 'ambassade'
+Nom[SEM=<allie>,NUM=<sing>] -> 'allie'
+Nom[SEM=<allie>,NUM=<plur>] -> 'allies'
+Nom[SEM=<ordinateur>,NUM=<sing>] -> 'ordinateur'
+Nom[SEM=<ordinateur>,NUM=<plur>] -> 'ordinateurs'
+Nom[SEM=<tourcellulaire>,NUM=<sing>] -> "tour" | "tour" Adj
+Nom[SEM=<enfant>, NUM=<sing>] -> 'enfant'
+Nom[SEM=<enfant>, NUM=<plur>] -> 'enfants'
+Nom[SEM=<amant>,NUM=<sing>] -> 'amant'
+Nom[SEM=<amant>,NUM=<plur>] -> 'amants'
+Nom[SEM=<associe>,NUM=<sing>] -> 'associe'
+Nom[SEM=<associe>,NUM=<plur>] -> 'associes'
+Nom[SEM=<impact>,NUM=<sing>] -> 'impact'
+Nom[SEM=<rayon>,NUM=<sing>] -> 'rayon' | 'radius'
+Pronom[SEM=<pronom>,GENRE=<masc>,NUM=<sing>] -> 'il' | 'lui'
+Pronom[SEM=<pronom>,GENRE=<masc>,NUM=<plur>] -> 'ils'
+Pronom[SEM=<pronom>,GENRE=<fem>,NUM=<sing>] -> 'elle' 
+Pronom[SEM=<pronom>,GENRE=<fem>,NUM=<plur>] -> 'elles'
+PronRel[SEM=<pronom>,GENRE=<glob>,NUM=<glob>] -> 'qui' | 'dont' 
+
+Art[NUM=<sing>] -> 'le' | 'la' | "l'" | "un" | "une"
+Art[NUM=<plur>] -> 'les'
+
+Adj -> 'riche' | 'riches' 
+Adj -> 'pauvre' | 'pauvres'
+Adj -> 'communiste' | 'communistes'
+Adj -> 'capitaliste' | 'capitalistes'
+Adj -> 'cellulaire'
+Adj -> 'residentiel'
+
+Conj -> 'mais' | 'ou' | 'et' | ','
+
+Sep -> ','
+
+Prep[NUM=<sing>] -> 'a' | 'au' | 'pour' | 'de' | 'du' | 'avec'
+Prep[NUM=<plur>] -> 'aux' | 'des'
+
+NegPx -> 'ne' | "n'" 
+NegSx -> 'pas' | 'jamais' | 'plus'
+
+VerbeConj[SEM=?sem,NUM=?num] -> "s'" VerbeConj[SEM=?sem,NUM=?num]
+VerbeConj[SEM=<egal>,NUM=<sing>] -> 'etait' | 'est' | 'sera' | 'va'
+VerbeConj[SEM=<egal>,NUM=<plur>] -> 'sont' | 'seront'
+VerbeSimple[SEM=?sem,NUM=?num] -> "se" VerbeSimple[SEM=?sem,NUM=?num]
+VerbeSimple[SEM=<situe>,NUM=<sing>] -> 'situe' | 'positionne' | 'situes' | 'positionnes'
+VerbeSimple[SEM=<marie>,NUM=<sing>] -> 'marie' | 'mariee'
+VerbeSimple[SEM=<marie>,NUM=<plur>] -> 'maries'
+VerbeSimple[SEM=<travailler>,NUM=<sing>] -> 'travaille'
+VerbeSimple[SEM=<travailler>,NUM=<plur>] -> 'travaillent'
+VerbeSimple[SEM=<amant>,NUM=<sing>] -> 'amant'
+VerbeSimple[SEM=<amant>,NUM=<plur>] -> 'amants'
+VerbeSimple[SEM=<situe>,NUM=<sing>] -> 'produit'
+
+Num[SEM=<1>] -> 'un' | '1'
+Num[SEM=<2>] -> 'deux' | '2'
+Num[SEM=<3>] -> 'trois' | '3'
+Num[SEM=<4>] -> 'quatre' | '4'
+Num[SEM=<5>] -> 'cinq' | '5'
+Num[SEM=<6>] -> 'six' | '6'
+Num[SEM=<7>] -> 'sept' | '7'
+Num[SEM=<8>] -> 'huit' | '8'
+Num[SEM=<9>] -> 'neuf' | '9'
+Num[SEM=<10>] -> 'dix' | '10'
+Num[SEM=<11>] -> 'onze' | '11'
+Num[SEM=<12>] -> 'douze' | '12'
+Num[SEM=<13>] -> 'treize' | '13'
+Num[SEM=<14>] -> 'quatorze' | '14'
+Num[SEM=<15>] -> 'quinze' | '15'
+Num[SEM=<16>] -> 'seize' | '16'
+Num[SEM=<17>] -> 'dix-sept' | '17'
+Num[SEM=<18>] -> 'dix-huit' | '18'
+Num[SEM=<19>] -> 'dix-neuf' | '19'
+Num[SEM=<20>] -> 'vingt' | '20'
+Num[SEM=<21>] -> 'vingt-et-un' | '21'
+Num[SEM=<22>] -> 'vingt-deux' | '22'
+Num[SEM=<23>] -> 'vingt-trois' | '23'
+Num[SEM=<24>] -> 'vingt-quatre' | '24'
+
+Temps -> 'heure' | 'heures'
+
+# __FIN__
